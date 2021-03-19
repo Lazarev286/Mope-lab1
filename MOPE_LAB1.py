@@ -1,5 +1,7 @@
 import random
 from prettytable import PrettyTable
+import time
+start_time = time.process_time()
 a0 = 4
 a1 = 5
 a2 = 9
@@ -72,6 +74,6 @@ for j in Y1:
 zadanie = SR_Y - min(Y2)
 print("Завдання по варіанту : ",zadanie)
 print("Yэт: " + str(Y_et))
-
+print("Час становить"+" %s секунд " % (start_time))
 
 
