@@ -3,6 +3,7 @@ import sklearn.linear_model as lm
 from scipy.stats import f, t
 from math import sqrt
 from pyDOE2 import *
+import timeit
 x_range = [(10, 50), (-20, 60), (-20, 20)]
 def Y_Matr(x1, x2, x3):
     f = 8.8+8.0*x1+5.4*x2+8.0*x3+0.2*x1*x1+0.2*x2*x2+2.9*x3*x3+3.4*x1*x2+0.9*x1*x3+3.5*x2*x3+0.3*x1*x2*x3
@@ -177,6 +178,8 @@ def coefficient3(x, y_aver, y, x_norm):
     print("\n•Результат рівняння зі знайденими коефіцієнтами:\n", np.dot(x, b))
     Сohren(m, y, y_aver, x_norm, b)
 def Сohren(m, y, y_aver, x_norm, b):
+    global t1
+    start_time = timeit.default_timer()
     print("\n•Критерій Кохрена:")
     dispersion = []
     for i in range(n):
@@ -208,7 +211,11 @@ def Сohren(m, y, y_aver, x_norm, b):
             Matrix_2(m, n)
         elif flag == "3":
             Matrix_3(m, n)
+    finish_time = timeit.default_timer()
+    t1 = finish_time - start_time
 def Student(m, dispersion, y_aver, x_norm, b):
+    global t2
+    start_time = timeit.default_timer()
     print("\n•Критерій Стюдента:")
     sb = sum(dispersion) / n
     s_beta = sqrt(sb / (n * m))
@@ -224,6 +231,8 @@ def Student(m, dispersion, y_aver, x_norm, b):
             b_impor.append(b[i])
         else:
             b_impor.append(0)
+    finish_time = timeit.default_timer()
+    t2 = finish_time - start_time
     print("Незначні коефіцієнти регресії")
     for i in range(k):
         if b[i] not in b_impor:
@@ -234,7 +243,8 @@ def Student(m, dispersion, y_aver, x_norm, b):
     print("Значення функції відгуку зі значущими коефіцієнтами:\n", [round(elem, 3) for elem in y_impor])
     Fisher(m, y_aver, b_impor, y_impor, sb)
 def Fisher(m, y_aver, b_impor, y_impor, sb):
-    global flag
+    global flag, t3
+    start_time = timeit.default_timer()
     print("\n•Критерій Фішера:")
     d = 0
     for i in b_impor:
@@ -257,7 +267,10 @@ def Fisher(m, y_aver, b_impor, y_impor, sb):
         elif flag == "2":
             flag = "3"
             Matrix_3(m, 14)
+    finish_time = timeit.default_timer()
+    t3 = finish_time - start_time
 flag = "3"
 n = 14
 m = 3
 Matrix_3(m, n)
+print("\nЧас виконання кожної статистичної перевірки: \nПеревірка за критерієм Кохрена - {} секунд \nПеревірка за критерієм Стьюдента - {} секунд \nПеревірка за критерієм Фішера - {} секунд".format(round(t1, 5), round(t2, 5), round(t3, 5)))
