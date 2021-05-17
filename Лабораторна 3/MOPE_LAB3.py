@@ -55,12 +55,14 @@ def Coeff(x, y_aver, n):
     print('\n2. Рівняння регресії:')
     print(f'{B[0]} + {B[1]}*x1 + {B[2]}*x2 + {B[3]}*x3')
     return B
-def S_KV(y, y_aver, n, m):
+#----------------------------------------------------------------
+def S_KV(y, y_aver, n, m):#знаходження суми дисперсії по рядках
     res = []
     for i in range(n):
         s = sum([(y_aver[i] - y[i][j])**2 for j in range(m)]) / m
         res.append(s)
     return res
+#-----------------------------------------------------------------
 def bs(x, y, y_aver, n):
     res = [sum(1 * y for y in y_aver) / n]
     for i in range(3):  # 4 - ксть факторів
