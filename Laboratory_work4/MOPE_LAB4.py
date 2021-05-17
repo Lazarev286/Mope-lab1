@@ -93,7 +93,8 @@ def Fisher(y, y_average, y_new, n, m, d, dispersion):
     S_ad = m / (n - d) * sum([(y_new[i] - y_average[i])**2 for i in range(len(y))])
     dispersion_average = sum(dispersion) / n
     return S_ad / dispersion_average
-def CH(X, Y, B, n, m, norm=False):
+#------------------------------------------------------------------------
+def CH(X, Y, B, n, m, norm=False):# Йде статистичні перевірки отриманих результатів
     f1 = m - 1
     f2 = n
     f3 = f1 * f2
@@ -109,14 +110,16 @@ def CH(X, Y, B, n, m, norm=False):
     Gp = max(dispersion_arr) / sum(dispersion_arr)
     print('Дисперсія y:', dispersion_arr)
     print(f'Gp = {Gp}')
-    if Gp < cohren_cr_table:
+    #---------------------------------
+    if Gp < cohren_cr_table:#Йде перевірка однорідності дисперсії за критерієм Кохрена 
         print(f'З ймовірністю {1-q} дисперсії однорідні.')
     else:
         print("Необхідно збільшити кількість дослідів")
-        m += 1
+        m += 1 #якщо дисперсія неоднорідна, то збільшити m
         plus_interact_eff(n, m)
+    #--------------------------------------
     print('\nКритерій Стьюдента:\n', ts)
-    res = [t for t in ts if t > student_cr_table]
+    res = [t for t in ts if t > student_cr_table]#Перевірка значимості коефіцієнтів рівняння регресії по критерієм Ст’юдента
     final_k = [B[i] for i in range(len(ts)) if ts[i] in res]
     print('\nКоефіцієнти {} статистично незначущі, тому ми виключаємо їх з рівняння.'.format(
         [round(i, 3) for i in B if i not in final_k]))
@@ -130,8 +133,9 @@ def CH(X, Y, B, n, m, norm=False):
         print('\nF4 <= 0')
         print('')
         return
+    #------------------------------------------
     f4 = n - d
-    Fp = Fisher(Y, y_aver, y_new, n, m, d, dispersion_arr)
+    Fp = Fisher(Y, y_aver, y_new, n, m, d, dispersion_arr)#перевірка адекватності моделі оригіналу за критерієм Фішера
     Ft = f.ppf(dfn=f4, dfd=f3, q=1 - 0.05)
     print('\nПеревірка адекватності за критерієм Фішера')
     print('Fp =', Fp)
@@ -139,9 +143,10 @@ def CH(X, Y, B, n, m, norm=False):
     if Fp < Ft:
         print('Математична модель адекватна експериментальним даним')
         return True
-    else:
+    else:#збільшується кількість членів рівняння регресії, змінюється МП,проводяться додаткові досліди
         print('Математична модель не адекватна експериментальним даним')
         return False
+#--------------------------------------------------------------------------------
 def plus_interact_eff(n, m):
     X, Y, X_norm = Matrix_interact_effect(n, m)
     y_aver = [round(sum(i) / len(i), 3) for i in Y]
