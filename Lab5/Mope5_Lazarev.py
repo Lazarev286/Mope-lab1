@@ -3,7 +3,7 @@ import sklearn.linear_model as lm
 from scipy.stats import f, t
 from functools import partial
 from pyDOE2 import *
-
+import timeit
 
 def regressia(x, b):
     y = sum([x[i] * b[i] for i in range(len(x))])
@@ -141,6 +141,8 @@ def BS(x, y_aver, n):
 
 
 def Student(x, y, y_aver, n, m):
+    global t1
+    start_time = timeit.default_timer()
     S_kv = S_KV(y, y_aver, n, m)
     s_kv_aver = sum(S_kv) / n
 
@@ -150,6 +152,8 @@ def Student(x, y, y_aver, n, m):
     ts = [round(abs(B) / s_Bs, 3) for B in Bs]
 
     return ts
+    finish_time = timeit.default_timer()
+    t1 = round(finish_time - start_time, 5)
 
 
 def Fisher(y, y_aver, y_new, n, m, d):
@@ -215,7 +219,8 @@ def CH(X, Y, B, n, m):
     print('\nПеревірка адекватності за критерієм Фішера')
     print('Fp =', F_p)
     print('F_t =', f_t)
-    if F_p < f_t:
+    print('Час дорівнює:', t1)
+    if F_p < f_t and t1<0.1:
         print('Математична модель адекватна експериментальним даним')
     else:
         print('Математична модель не адекватна експериментальним даним')
